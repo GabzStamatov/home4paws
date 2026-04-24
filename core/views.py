@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 
 from .models import Pet, AdoptionApplication
 
@@ -34,3 +35,9 @@ def apply_for_pet(request, pet_id):
         return redirect('pet_list')
 
     return render(request, 'core/apply_for_pet.html', {'pet': pet})
+
+
+@login_required
+def my_applications(request):
+    applications = AdoptionApplication.objects.filter(user=request.user)
+    return render(request, 'core/my_applications.html', {'applications': applications})

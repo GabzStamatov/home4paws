@@ -1,0 +1,13 @@
+<h1>My Applications</h1>
+
+<ul>
+    {% for app in applications %}
+        <li>
+            {{ app.pet.name }} - Status: {{ app.status }}
+        </li>
+    {% empty %}
+        <li>You have no applications.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'pet_list' %}">Back to pets</a>
