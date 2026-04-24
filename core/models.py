@@ -26,3 +26,29 @@ class Shelter(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Pet(models.Model):
+    PET_TYPE_CHOICES = [
+        ('DOG', 'Dog'),
+        ('CAT', 'Cat'),
+        ('OTHER', 'Other'),
+    ]
+
+    STATUS_CHOICES = [
+        ('AVAILABLE', 'Available'),
+        ('ADOPTED', 'Adopted'),
+    ]
+
+    shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100)
+    pet_type = models.CharField(max_length=10, choices=PET_TYPE_CHOICES)
+    breed = models.CharField(max_length=100)
+    age = models.IntegerField()
+    gender = models.CharField(max_length=10)
+    description = models.TextField()
+    vaccination_status = models.BooleanField(default=False)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='AVAILABLE')
+
+    def __str__(self):
+        return self.name
