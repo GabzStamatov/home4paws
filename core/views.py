@@ -2,9 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 
-from .models import Pet, AdoptionApplication
+
 from .models import Pet, AdoptionApplication, Favourite
 from .forms import PetForm
+from django.contrib.auth import logout
 
 
 def home(request):
@@ -27,6 +28,9 @@ def is_staff_user(user):
 
 @login_required
 def apply_for_pet(request, pet_id):
+    if request.user.profile.role != 'ADOPTER':
+        return HttpResponseForbidden("Only adopters can apply for pets.")
+
     pet = get_object_or_404(Pet, id=pet_id)
 
     if request.method == 'POST':
@@ -38,7 +42,7 @@ def apply_for_pet(request, pet_id):
             application_text=application_text
         )
 
-        return redirect('pet_list')
+        return redirect('my_applications')
 
     return render(request, 'core/apply_for_pet.html', {'pet': pet})
 
@@ -47,6 +51,7 @@ def apply_for_pet(request, pet_id):
 def my_applications(request):
     applications = AdoptionApplication.objects.filter(user=request.user)
     return render(request, 'core/my_applications.html', {'applications': applications})
+
 
 @login_required
 def staff_applications(request):
@@ -67,6 +72,7 @@ def approve_application(request, app_id):
     app.pet.status = 'ADOPTED'
     app.pet.save()
     app.save()
+
     return redirect('staff_applications')
 
 
@@ -78,12 +84,14 @@ def reject_application(request, app_id):
     app = get_object_or_404(AdoptionApplication, id=app_id)
     app.status = 'REJECTED'
     app.save()
+
     return redirect('staff_applications')
+
 
 @login_required
 def toggle_favourite(request, pet_id):
     if request.user.profile.role != 'ADOPTER':
-        return HttpResponseForbidden("Not allowed")
+        return HttpResponseForbidden("Only adopters can favourite pets.")
 
     pet = get_object_or_404(Pet, id=pet_id)
 
@@ -97,10 +105,15 @@ def toggle_favourite(request, pet_id):
 
     return redirect('pet_list')
 
+
 @login_required
 def my_favourites(request):
+    if request.user.profile.role != 'ADOPTER':
+        return HttpResponseForbidden("Only adopters can view favourites.")
+
     favourites = Favourite.objects.filter(user=request.user)
     return render(request, 'core/my_favourites.html', {'favourites': favourites})
+
 
 @login_required
 def add_pet(request):
@@ -109,13 +122,17 @@ def add_pet(request):
 
     if request.method == 'POST':
         form = PetForm(request.POST)
+
         if form.is_valid():
             form.save()
             return redirect('pet_list')
     else:
         form = PetForm()
 
-    return render(request, 'core/pet_form.html', {'form': form, 'title': 'Add Pet'})
+    return render(request, 'core/pet_form.html', {
+        'form': form,
+        'title': 'Add Pet'
+    })
 
 
 @login_required
@@ -127,13 +144,17 @@ def edit_pet(request, pet_id):
 
     if request.method == 'POST':
         form = PetForm(request.POST, instance=pet)
+
         if form.is_valid():
             form.save()
             return redirect('pet_detail', pet_id=pet.id)
     else:
         form = PetForm(instance=pet)
 
-    return render(request, 'core/pet_form.html', {'form': form, 'title': 'Edit Pet'})
+    return render(request, 'core/pet_form.html', {
+        'form': form,
+        'title': 'Edit Pet'
+    })
 
 
 @login_required
@@ -148,3 +169,7 @@ def delete_pet(request, pet_id):
         return redirect('pet_list')
 
     return render(request, 'core/delete_pet.html', {'pet': pet})
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
