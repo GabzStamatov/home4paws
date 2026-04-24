@@ -1,14 +1,48 @@
 {% extends 'core/base.html' %}
 
+{% block content %}
 <h1>Apply for {{ pet.name }}</h1>
 
 <form method="POST">
     {% csrf_token %}
-    
+
     <label>Why do you want to adopt this pet?</label><br>
     <textarea name="application_text" required></textarea><br><br>
+
+    <label>Do you live in a house or apartment?</label><br>
+    <select name="housing_type" required>
+        <option value="">Select one</option>
+        <option value="House">House</option>
+        <option value="Apartment">Apartment</option>
+        <option value="Other">Other</option>
+    </select><br><br>
+
+    <label>
+        <input type="checkbox" name="has_garden">
+        Do you have a garden?
+    </label><br><br>
+
+    <label>
+        <input type="checkbox" name="near_park">
+        Do you live near a park or open space?
+    </label><br><br>
+
+    <label>
+        <input type="checkbox" name="has_other_pets">
+        Do you currently have other pets?
+    </label><br><br>
+
+    <label>Describe your previous experience with pets:</label><br>
+    <textarea name="pet_experience"></textarea><br><br>
+
+    <label>How many hours per day would the pet be left alone?</label><br>
+    <input type="number" name="hours_alone" min="0" max="24" required><br><br>
+
+    <label>Any additional reason why you would be a suitable adopter?</label><br>
+    <textarea name="reason"></textarea><br><br>
 
     <button type="submit">Submit Application</button>
 </form>
 
 <a href="{% url 'pet_detail' pet.id %}">Back</a>
+{% endblock %}

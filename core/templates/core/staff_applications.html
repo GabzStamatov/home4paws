@@ -1,19 +1,28 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-
 <h1>All Applications</h1>
 
 <ul>
     {% for app in applications %}
         <li>
-            {{ app.user.username }} applied for {{ app.pet.name }}
-            - Status: {{ app.status }}
+            <strong>{{ app.user.username }}</strong> applied for <strong>{{ app.pet.name }}</strong><br>
+            Status: {{ app.status }}<br>
+            Housing: {{ app.housing_type }}<br>
+            Garden: {{ app.has_garden }}<br>
+            Near park: {{ app.near_park }}<br>
+            Other pets: {{ app.has_other_pets }}<br>
+            Hours alone: {{ app.hours_alone }}<br>
+            Experience: {{ app.pet_experience }}<br>
+            Reason: {{ app.reason }}<br>
+            Main message: {{ app.application_text }}<br>
 
             <a href="{% url 'approve_application' app.id %}">Approve</a>
             <a href="{% url 'reject_application' app.id %}">Reject</a>
         </li>
+        <br>
+    {% empty %}
+        <li>No applications.</li>
     {% endfor %}
 </ul>
-
 {% endblock %}

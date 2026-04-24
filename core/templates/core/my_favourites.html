@@ -1,12 +1,18 @@
 {% extends 'core/base.html' %}
 
+{% block content %}
 <h1>My Favourite Pets</h1>
 
 <ul>
     {% for favourite in favourites %}
         <li>
+            {% if favourite.pet.image %}
+                <img src="{{ favourite.pet.image.url }}" width="150">
+                <br>
+            {% endif %}
+
             <a href="{% url 'pet_detail' favourite.pet.id %}">
-                {{ favourite.pet.name }}
+                <strong>{{ favourite.pet.name }}</strong>
             </a>
             - {{ favourite.pet.breed }}
         </li>
@@ -16,3 +22,4 @@
 </ul>
 
 <a href="{% url 'pet_list' %}">Back to pets</a>
+{% endblock %}

@@ -158,6 +158,31 @@ def edit_pet(request, pet_id):
 
 
 @login_required
+def apply_for_pet(request, pet_id):
+    if request.user.profile.role != 'ADOPTER':
+        return HttpResponseForbidden("Only adopters can apply for pets.")
+
+    pet = get_object_or_404(Pet, id=pet_id)
+
+    if request.method == 'POST':
+        AdoptionApplication.objects.create(
+            user=request.user,
+            pet=pet,
+            application_text=request.POST.get('application_text'),
+            housing_type=request.POST.get('housing_type'),
+            has_garden=request.POST.get('has_garden') == 'on',
+            near_park=request.POST.get('near_park') == 'on',
+            has_other_pets=request.POST.get('has_other_pets') == 'on',
+            pet_experience=request.POST.get('pet_experience'),
+            hours_alone=request.POST.get('hours_alone') or 0,
+            reason=request.POST.get('reason'),
+        )
+
+        return redirect('my_applications')
+
+    return render(request, 'core/apply_for_pet.html', {'pet': pet})
+
+@login_required
 def delete_pet(request, pet_id):
     if not is_staff_user(request.user):
         return HttpResponseForbidden("You are not allowed to access this page.")

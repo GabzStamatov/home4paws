@@ -11,7 +11,7 @@
 
 <ul>
     {% for pet in pets %}
-            <li>
+        <li>
             <a href="{% url 'pet_detail' pet.id %}">
                 <strong>{{ pet.name }}</strong>
             </a>
@@ -19,15 +19,16 @@
 
             {% if pet.image %}
                 <br>
-                <img src="{{ pet.image.url }}" width="150">
-            {% endif %}
-
-            {% if user.is_authenticated and user.profile.role == 'ADOPTER' %}
-                <a href="{% url 'apply_for_pet' pet.id %}">Apply</a>
-                <a href="{% url 'toggle_favourite' pet.id %}">⭐</a>
+                <img src="{{ pet.image.url }}" width="150" alt="{{ pet.name }}">
+                <br>
             {% endif %}
 
             {% if user.is_authenticated %}
+                {% if user.profile.role == 'ADOPTER' %}
+                    <a href="{% url 'apply_for_pet' pet.id %}">Apply</a>
+                    <a href="{% url 'toggle_favourite' pet.id %}">⭐ Favourite</a>
+                {% endif %}
+
                 {% if user.profile.role == 'STAFF' or user.profile.role == 'ADMIN' %}
                     <a href="{% url 'edit_pet' pet.id %}">Edit</a>
                     <a href="{% url 'delete_pet' pet.id %}">Delete</a>

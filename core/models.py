@@ -65,6 +65,14 @@ class AdoptionApplication(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
 
     application_text = models.TextField()
+    housing_type = models.CharField(max_length=50, blank=True)
+    has_garden = models.BooleanField(default=False)
+    near_park = models.BooleanField(default=False)
+    has_other_pets = models.BooleanField(default=False)
+    pet_experience = models.TextField(blank=True)
+    hours_alone = models.IntegerField(default=0)
+    reason = models.TextField(blank=True)
+
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
     created_at = models.DateTimeField(auto_now_add=True)
 
