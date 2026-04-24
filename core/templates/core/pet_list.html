@@ -1,9 +1,14 @@
-<h1>Available Pets</h1>
+<h1>Available Pets 🐾</h1>
 
 <ul>
     {% for pet in pets %}
         <li>
-            {{ pet.name }} - {{ pet.breed }} ({{ pet.pet_type }})
+            <a href="{% url 'pet_detail' pet.id %}">
+                <strong>{{ pet.name }}</strong>
+            </a>
+            - {{ pet.breed }} ({{ pet.pet_type }})
         </li>
+    {% empty %}
+        <li>No pets available right now.</li>
     {% endfor %}
 </ul>
