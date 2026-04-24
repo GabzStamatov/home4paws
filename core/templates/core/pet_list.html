@@ -1,0 +1,9 @@
+<h1>Available Pets</h1>
+
+<ul>
+    {% for pet in pets %}
+        <li>
+            {{ pet.name }} - {{ pet.breed }} ({{ pet.pet_type }})
+        </li>
+    {% endfor %}
+</ul>
