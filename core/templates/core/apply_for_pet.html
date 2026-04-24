@@ -1,0 +1,12 @@
+<h1>Apply for {{ pet.name }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    
+    <label>Why do you want to adopt this pet?</label><br>
+    <textarea name="application_text" required></textarea><br><br>
+
+    <button type="submit">Submit Application</button>
+</form>
+
+<a href="{% url 'pet_detail' pet.id %}">Back</a>

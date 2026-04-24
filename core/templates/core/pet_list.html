@@ -7,6 +7,7 @@
                 <strong>{{ pet.name }}</strong>
             </a>
             - {{ pet.breed }} ({{ pet.pet_type }})
+            <a href="{% url 'apply_for_pet' pet.id %}">Apply for this pet</a>
         </li>
     {% empty %}
         <li>No pets available right now.</li>
