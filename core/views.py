@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 
 from .models import Pet, AdoptionApplication
+from .models import Pet, AdoptionApplication, Favourite
 
 
 def home(request):
@@ -77,3 +78,22 @@ def reject_application(request, app_id):
     app.status = 'REJECTED'
     app.save()
     return redirect('staff_applications')
+
+@login_required
+def toggle_favourite(request, pet_id):
+    pet = get_object_or_404(Pet, id=pet_id)
+
+    favourite, created = Favourite.objects.get_or_create(
+        user=request.user,
+        pet=pet
+    )
+
+    if not created:
+        favourite.delete()
+
+    return redirect('pet_list')
+
+@login_required
+def my_favourites(request):
+    favourites = Favourite.objects.filter(user=request.user)
+    return render(request, 'core/my_favourites.html', {'favourites': favourites})

@@ -1,3 +1,6 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
 <h1>Available Pets 🐾</h1>
 
 <ul>
@@ -7,9 +10,9 @@
                 <strong>{{ pet.name }}</strong>
             </a>
             - {{ pet.breed }} ({{ pet.pet_type }})
-            <a href="{% url 'apply_for_pet' pet.id %}">Apply for this pet</a>
+            <a href="{% url 'apply_for_pet' pet.id %}">Apply</a>
+            <a href="{% url 'toggle_favourite' pet.id %}">Favourite</a>
         </li>
-    {% empty %}
-        <li>No pets available right now.</li>
     {% endfor %}
 </ul>
+{% endblock %}
