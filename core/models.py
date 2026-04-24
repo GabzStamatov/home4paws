@@ -17,7 +17,7 @@ class Profile(models.Model): #stores role
     def __str__(self):
         return self.user.username
     
-class Shelter(models.Model):
+class Shelter(models.Model): #animal shelter
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=150)
     contact_email = models.EmailField()
@@ -27,7 +27,7 @@ class Shelter(models.Model):
     def __str__(self):
         return self.name
     
-class Pet(models.Model):
+class Pet(models.Model):#all of the pets
     PET_TYPE_CHOICES = [
         ('DOG', 'Dog'),
         ('CAT', 'Cat'),
@@ -52,3 +52,20 @@ class Pet(models.Model):
 
     def __str__(self):
         return self.name
+    
+class AdoptionApplication(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('APPROVED', 'Approved'),
+        ('REJECTED', 'Rejected'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
+
+    application_text = models.TextField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.pet.name}"
