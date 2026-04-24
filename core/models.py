@@ -69,3 +69,14 @@ class AdoptionApplication(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.pet.name}"
+    
+class Favourite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'pet')
+
+    def __str__(self):
+        return f"{self.user.username} saved {self.pet.name}"
