@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 from .models import Pet, AdoptionApplication
 
@@ -17,6 +17,10 @@ def pet_list(request):
 def pet_detail(request, pet_id):
     pet = get_object_or_404(Pet, id=pet_id)
     return render(request, 'core/pet_detail.html', {'pet': pet})
+
+
+def is_staff_user(user):
+    return hasattr(user, 'profile') and user.profile.role in ['STAFF', 'ADMIN']
 
 
 @login_required
@@ -44,12 +48,18 @@ def my_applications(request):
 
 @login_required
 def staff_applications(request):
+    if not is_staff_user(request.user):
+        return HttpResponseForbidden("You are not allowed to access this page.")
+
     applications = AdoptionApplication.objects.all()
     return render(request, 'core/staff_applications.html', {'applications': applications})
 
 
 @login_required
 def approve_application(request, app_id):
+    if not is_staff_user(request.user):
+        return HttpResponseForbidden("You are not allowed to access this page.")
+
     app = get_object_or_404(AdoptionApplication, id=app_id)
     app.status = 'APPROVED'
     app.pet.status = 'ADOPTED'
@@ -60,6 +70,9 @@ def approve_application(request, app_id):
 
 @login_required
 def reject_application(request, app_id):
+    if not is_staff_user(request.user):
+        return HttpResponseForbidden("You are not allowed to access this page.")
+
     app = get_object_or_404(AdoptionApplication, id=app_id)
     app.status = 'REJECTED'
     app.save()
