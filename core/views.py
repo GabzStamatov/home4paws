@@ -41,3 +41,26 @@ def apply_for_pet(request, pet_id):
 def my_applications(request):
     applications = AdoptionApplication.objects.filter(user=request.user)
     return render(request, 'core/my_applications.html', {'applications': applications})
+
+@login_required
+def staff_applications(request):
+    applications = AdoptionApplication.objects.all()
+    return render(request, 'core/staff_applications.html', {'applications': applications})
+
+
+@login_required
+def approve_application(request, app_id):
+    app = get_object_or_404(AdoptionApplication, id=app_id)
+    app.status = 'APPROVED'
+    app.pet.status = 'ADOPTED'
+    app.pet.save()
+    app.save()
+    return redirect('staff_applications')
+
+
+@login_required
+def reject_application(request, app_id):
+    app = get_object_or_404(AdoptionApplication, id=app_id)
+    app.status = 'REJECTED'
+    app.save()
+    return redirect('staff_applications')
