@@ -15,4 +15,5 @@ class PetForm(forms.ModelForm):
             'description',
             'vaccination_status',
             'status',
+            'image',
         ]

@@ -11,11 +11,16 @@
 
 <ul>
     {% for pet in pets %}
-        <li>
+            <li>
             <a href="{% url 'pet_detail' pet.id %}">
                 <strong>{{ pet.name }}</strong>
             </a>
             - {{ pet.breed }} ({{ pet.pet_type }})
+
+            {% if pet.image %}
+                <br>
+                <img src="{{ pet.image.url }}" width="150">
+            {% endif %}
 
             {% if user.is_authenticated and user.profile.role == 'ADOPTER' %}
                 <a href="{% url 'apply_for_pet' pet.id %}">Apply</a>

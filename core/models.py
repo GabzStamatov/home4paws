@@ -49,6 +49,7 @@ class Pet(models.Model):#all of the pets
     description = models.TextField()
     vaccination_status = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='AVAILABLE')
+    image = models.ImageField(upload_to='pet_images/', blank=True, null=True)
 
     def __str__(self):
         return self.name
