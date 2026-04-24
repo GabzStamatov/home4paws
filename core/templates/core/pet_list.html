@@ -3,6 +3,12 @@
 {% block content %}
 <h1>Available Pets 🐾</h1>
 
+{% if user.is_authenticated %}
+    {% if user.profile.role == 'STAFF' or user.profile.role == 'ADMIN' %}
+        <p><a href="{% url 'add_pet' %}">Add New Pet</a></p>
+    {% endif %}
+{% endif %}
+
 <ul>
     {% for pet in pets %}
         <li>
@@ -10,9 +16,21 @@
                 <strong>{{ pet.name }}</strong>
             </a>
             - {{ pet.breed }} ({{ pet.pet_type }})
-            <a href="{% url 'apply_for_pet' pet.id %}">Apply</a>
-            <a href="{% url 'toggle_favourite' pet.id %}">Favourite</a>
+
+            {% if user.is_authenticated and user.profile.role == 'ADOPTER' %}
+                <a href="{% url 'apply_for_pet' pet.id %}">Apply</a>
+                <a href="{% url 'toggle_favourite' pet.id %}">⭐</a>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                {% if user.profile.role == 'STAFF' or user.profile.role == 'ADMIN' %}
+                    <a href="{% url 'edit_pet' pet.id %}">Edit</a>
+                    <a href="{% url 'delete_pet' pet.id %}">Delete</a>
+                {% endif %}
+            {% endif %}
         </li>
+    {% empty %}
+        <li>No pets available right now.</li>
     {% endfor %}
 </ul>
 {% endblock %}

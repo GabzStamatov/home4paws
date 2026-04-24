@@ -4,6 +4,7 @@ from django.http import HttpResponseForbidden
 
 from .models import Pet, AdoptionApplication
 from .models import Pet, AdoptionApplication, Favourite
+from .forms import PetForm
 
 
 def home(request):
@@ -81,6 +82,9 @@ def reject_application(request, app_id):
 
 @login_required
 def toggle_favourite(request, pet_id):
+    if request.user.profile.role != 'ADOPTER':
+        return HttpResponseForbidden("Not allowed")
+
     pet = get_object_or_404(Pet, id=pet_id)
 
     favourite, created = Favourite.objects.get_or_create(
@@ -97,3 +101,50 @@ def toggle_favourite(request, pet_id):
 def my_favourites(request):
     favourites = Favourite.objects.filter(user=request.user)
     return render(request, 'core/my_favourites.html', {'favourites': favourites})
+
+@login_required
+def add_pet(request):
+    if not is_staff_user(request.user):
+        return HttpResponseForbidden("You are not allowed to access this page.")
+
+    if request.method == 'POST':
+        form = PetForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('pet_list')
+    else:
+        form = PetForm()
+
+    return render(request, 'core/pet_form.html', {'form': form, 'title': 'Add Pet'})
+
+
+@login_required
+def edit_pet(request, pet_id):
+    if not is_staff_user(request.user):
+        return HttpResponseForbidden("You are not allowed to access this page.")
+
+    pet = get_object_or_404(Pet, id=pet_id)
+
+    if request.method == 'POST':
+        form = PetForm(request.POST, instance=pet)
+        if form.is_valid():
+            form.save()
+            return redirect('pet_detail', pet_id=pet.id)
+    else:
+        form = PetForm(instance=pet)
+
+    return render(request, 'core/pet_form.html', {'form': form, 'title': 'Edit Pet'})
+
+
+@login_required
+def delete_pet(request, pet_id):
+    if not is_staff_user(request.user):
+        return HttpResponseForbidden("You are not allowed to access this page.")
+
+    pet = get_object_or_404(Pet, id=pet_id)
+
+    if request.method == 'POST':
+        pet.delete()
+        return redirect('pet_list')
+
+    return render(request, 'core/delete_pet.html', {'pet': pet})

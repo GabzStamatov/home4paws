@@ -13,4 +13,8 @@ urlpatterns = [
     path('staff/applications/<int:app_id>/reject/', views.reject_application, name='reject_application'),
     path('pets/<int:pet_id>/favourite/', views.toggle_favourite, name='toggle_favourite'),
     path('my-favourites/', views.my_favourites, name='my_favourites'),
+
+    path('pets/add/', views.add_pet, name='add_pet'),
+    path('pets/<int:pet_id>/edit/', views.edit_pet, name='edit_pet'),
+    path('pets/<int:pet_id>/delete/', views.delete_pet, name='delete_pet'),
 ]

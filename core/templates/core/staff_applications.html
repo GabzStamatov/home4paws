@@ -1,13 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
 <h1>All Applications</h1>
 
 <ul>
     {% for app in applications %}
         <li>
-            {{ app.user.username }} applied for {{ app.pet.name }} - Status: {{ app.status }}
+            {{ app.user.username }} applied for {{ app.pet.name }}
+            - Status: {{ app.status }}
+
             <a href="{% url 'approve_application' app.id %}">Approve</a>
             <a href="{% url 'reject_application' app.id %}">Reject</a>
         </li>
-    {% empty %}
-        <li>No applications.</li>
     {% endfor %}
 </ul>
+
+{% endblock %}
