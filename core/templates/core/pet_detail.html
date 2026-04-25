@@ -2,22 +2,74 @@
 
 {% block content %}
 
-<h1>{{ pet.name }}</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
 
-<p><strong>Type:</strong> {{ pet.pet_type }}</p>
-<p><strong>Breed:</strong> {{ pet.breed }}</p>
-<p><strong>Age:</strong> {{ pet.age }}</p>
-<p><strong>Gender:</strong> {{ pet.gender }}</p>
-<p><strong>Status:</strong> {{ pet.status }}</p>
-<p><strong>Vaccinated:</strong> {{ pet.vaccination_status }}</p>
-<p><strong>Description:</strong> {{ pet.description }}</p>
-<p><strong>Shelter:</strong> {{ pet.shelter.name }}</p>
+    <div>
+        {% if pet.image %}
+            <img src="{{ pet.image.url }}" 
+                 alt="{{ pet.name }}" 
+                 class="w-full h-80 object-cover rounded-xl shadow">
+        {% else %}
+            <div class="w-full h-80 bg-pink-100 rounded-xl flex items-center justify-center text-gray-500">
+                No image available
+            </div>
+        {% endif %}
+    </div>
 
-{% if pet.image %}
-    <img src="{{ pet.image.url }}" alt="{{ pet.name }}" width="300">
-{% endif %}
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4 border-b pb-2">
+            {{ pet.name }}
+        </h1>
 
-<br><br>
-<a href="{% url 'pet_list' %}">Back to pets</a>
+        <div class="space-y-3 text-gray-700">
+            <p><strong>Type:</strong> {{ pet.pet_type }}</p>
+            <p><strong>Breed:</strong> {{ pet.breed }}</p>
+            <p><strong>Age:</strong> {{ pet.age }}</p>
+            <p><strong>Gender:</strong> {{ pet.gender }}</p>
+            <p><strong>Status:</strong> {{ pet.status }}</p>
+            <p><strong>Vaccinated:</strong> {{ pet.vaccination_status }}</p>
+            <p><strong>Shelter:</strong> {{ pet.shelter.name }}</p>
+        </div>
+
+        <div class="mt-5 bg-pink-50 rounded-lg p-4">
+            <h2 class="font-semibold text-gray-800 mb-2">About {{ pet.name }}</h2>
+            <p class="text-gray-600">{{ pet.description }}</p>
+        </div>
+
+        <div class="mt-6 flex gap-3 flex-wrap">
+            {% if user.is_authenticated %}
+                {% if user.profile.role == 'ADOPTER' %}
+                    <a href="{% url 'apply_for_pet' pet.id %}" 
+                       class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600">
+                        Apply
+                    </a>
+
+                    <a href="{% url 'toggle_favourite' pet.id %}" 
+                       class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg hover:bg-yellow-200">
+                        Favourite
+                    </a>
+                {% endif %}
+
+                {% if user.profile.role == 'STAFF' or user.profile.role == 'ADMIN' %}
+                    <a href="{% url 'edit_pet' pet.id %}" 
+                       class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200">
+                        Edit
+                    </a>
+
+                    <a href="{% url 'delete_pet' pet.id %}" 
+                       class="bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200">
+                        Delete
+                    </a>
+                {% endif %}
+            {% endif %}
+
+            <a href="{% url 'pet_list' %}" 
+               class="text-gray-600 px-4 py-2 hover:underline">
+                ← Back to pets
+            </a>
+        </div>
+    </div>
+
+</div>
 
 {% endblock %}

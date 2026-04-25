@@ -1,28 +1,80 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1>All Applications</h1>
 
-<ul>
+<h1 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">
+    Applications Dashboard 🛠️
+</h1>
+
+<div class="space-y-6">
     {% for app in applications %}
-        <li>
-            <strong>{{ app.user.username }}</strong> applied for <strong>{{ app.pet.name }}</strong><br>
-            Status: {{ app.status }}<br>
-            Housing: {{ app.housing_type }}<br>
-            Garden: {{ app.has_garden }}<br>
-            Near park: {{ app.near_park }}<br>
-            Other pets: {{ app.has_other_pets }}<br>
-            Hours alone: {{ app.hours_alone }}<br>
-            Experience: {{ app.pet_experience }}<br>
-            Reason: {{ app.reason }}<br>
-            Main message: {{ app.application_text }}<br>
+    <div class="bg-white shadow-md rounded-xl p-6 mb-6 border border-gray-100">
 
-            <a href="{% url 'approve_application' app.id %}">Approve</a>
-            <a href="{% url 'reject_application' app.id %}">Reject</a>
-        </li>
-        <br>
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-pink-600">
+                {{ app.user.username }} → {{ app.pet.name }}
+            </h2>
+
+            <span class="
+                px-3 py-1 text-sm rounded-full
+                {% if app.status == 'APPROVED' %}
+                    bg-green-100 text-green-700
+                {% elif app.status == 'REJECTED' %}
+                    bg-red-100 text-red-600
+                {% else %}
+                    bg-yellow-100 text-yellow-700
+                {% endif %}
+            ">
+                {{ app.status }}
+            </span>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="grid grid-cols-2 gap-4 text-gray-700 mb-4">
+            <p><strong>Housing:</strong> {{ app.housing_type }}</p>
+            <p><strong>Garden:</strong> {{ app.has_garden|yesno:"Yes,No" }}</p>
+            <p><strong>Near park:</strong> {{ app.near_park|yesno:"Yes,No" }}</p>
+            <p><strong>Other pets:</strong> {{ app.has_other_pets|yesno:"Yes,No" }}</p>
+            <p><strong>Hours alone:</strong> {{ app.hours_alone }}</p>
+        </div>
+
+        <!-- Text Sections -->
+        <div class="space-y-3 mb-4">
+            <div>
+                <p class="font-semibold text-gray-800">Experience</p>
+                <p class="text-gray-600 text-sm">{{ app.pet_experience|default:"—" }}</p>
+            </div>
+
+            <div>
+                <p class="font-semibold text-gray-800">Reason</p>
+                <p class="text-gray-600 text-sm">{{ app.reason|default:"—" }}</p>
+            </div>
+
+            <div>
+                <p class="font-semibold text-gray-800">Application Message</p>
+                <p class="text-gray-600 text-sm">{{ app.application_text }}</p>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-3">
+            <a href="{% url 'approve_application' app.id %}"
+            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 text-sm">
+                Approve
+            </a>
+
+            <a href="{% url 'reject_application' app.id %}"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 text-sm">
+                Reject
+            </a>
+        </div>
+
+    </div>
+
     {% empty %}
-        <li>No applications.</li>
+        <p class="text-gray-600">No applications.</p>
     {% endfor %}
-</ul>
+</div>
+
 {% endblock %}

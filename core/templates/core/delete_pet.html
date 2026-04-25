@@ -1,14 +1,38 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1>Delete Pet</h1>
 
-<p>Are you sure you want to delete {{ pet.name }}?</p>
+<div class="max-w-xl mx-auto bg-white rounded-xl shadow-md p-6 text-center">
 
-<form method="POST">
-    {% csrf_token %}
-    <button type="submit">Yes, delete</button>
-</form>
+    <h1 class="text-2xl font-bold text-red-600 mb-4">
+        Delete Pet
+    </h1>
 
-<a href="{% url 'pet_detail' pet.id %}">Cancel</a>
+    <p class="text-gray-700 mb-6">
+        Are you sure you want to delete 
+        <span class="font-semibold text-gray-900">{{ pet.name }}</span>?
+    </p>
+
+    {% if pet.image %}
+        <img src="{{ pet.image.url }}" 
+             alt="{{ pet.name }}" 
+             class="w-full h-48 object-cover rounded-lg mb-6">
+    {% endif %}
+
+    <form method="POST" class="flex justify-center gap-4">
+        {% csrf_token %}
+
+        <button type="submit" 
+                class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600">
+            Yes, Delete
+        </button>
+
+        <a href="{% url 'pet_detail' pet.id %}" 
+           class="bg-gray-100 px-5 py-2 rounded-lg hover:bg-gray-200">
+            Cancel
+        </a>
+    </form>
+
+</div>
+
 {% endblock %}

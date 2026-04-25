@@ -1,17 +1,61 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1>My Applications</h1>
 
-<ul>
+<h1 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">
+    My Applications
+</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for app in applications %}
-        <li>
-            {{ app.pet.name }} - Status: {{ app.status }}
-        </li>
-    {% empty %}
-        <li>You have no applications.</li>
-    {% endfor %}
-</ul>
+        <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition">
 
-<a href="{% url 'pet_list' %}">Back to pets</a>
+            {% if app.pet.image %}
+                <img src="{{ app.pet.image.url }}" 
+                     alt="{{ app.pet.name }}" 
+                     class="w-full h-48 object-cover rounded-lg mb-4">
+            {% endif %}
+
+            <h2 class="text-xl font-semibold text-pink-600">
+                {{ app.pet.name }}
+            </h2>
+
+            <p class="text-gray-600 mt-1">
+                {{ app.pet.breed }}
+            </p>
+
+            <div class="mt-3">
+                <span class="
+                    px-3 py-1 rounded-lg text-sm
+                    {% if app.status == 'APPROVED' %}
+                        bg-green-100 text-green-700
+                    {% elif app.status == 'REJECTED' %}
+                        bg-red-100 text-red-600
+                    {% else %}
+                        bg-yellow-100 text-yellow-700
+                    {% endif %}
+                ">
+                    {{ app.status }}
+                </span>
+            </div>
+
+            <div class="mt-4">
+                <a href="{% url 'pet_detail' app.pet.id %}" 
+                   class="text-gray-600 hover:underline">
+                    View Pet →
+                </a>
+            </div>
+
+        </div>
+    {% empty %}
+        <p class="text-gray-600">You have no applications.</p>
+    {% endfor %}
+</div>
+
+<div class="mt-6">
+    <a href="{% url 'pet_list' %}" class="text-pink-600 hover:underline">
+        ← Back to pets
+    </a>
+</div>
+
 {% endblock %}

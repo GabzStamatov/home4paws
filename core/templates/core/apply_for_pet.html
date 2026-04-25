@@ -1,48 +1,72 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1>Apply for {{ pet.name }}</h1>
+<h1 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">
+    Apply for {{ pet.name }} 
+</h1>
 
-<form method="POST">
+<form method="POST" class="space-y-5 max-w-2xl">
     {% csrf_token %}
 
-    <label>Why do you want to adopt this pet?</label><br>
-    <textarea name="application_text" required></textarea><br><br>
+    <div>
+        <label class="block font-semibold mb-1">Why do you want to adopt this pet?</label>
+        <textarea name="application_text" required
+                  class="w-full border rounded-lg p-3 min-h-24"></textarea>
+    </div>
 
-    <label>Do you live in a house or apartment?</label><br>
-    <select name="housing_type" required>
-        <option value="">Select one</option>
-        <option value="House">House</option>
-        <option value="Apartment">Apartment</option>
-        <option value="Other">Other</option>
-    </select><br><br>
+    <div>
+        <label class="block font-semibold mb-1">Do you live in a house or apartment?</label>
+        <select name="housing_type" required class="w-full border rounded-lg p-3">
+            <option value="">Select one</option>
+            <option value="House">House</option>
+            <option value="Apartment">Apartment</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
 
-    <label>
-        <input type="checkbox" name="has_garden">
-        Do you have a garden?
-    </label><br><br>
+    <div class="bg-pink-50 rounded-lg p-4 space-y-3">
+        <label class="block">
+            <input type="checkbox" name="has_garden" class="mr-2">
+            Do you have a garden?
+        </label>
 
-    <label>
-        <input type="checkbox" name="near_park">
-        Do you live near a park or open space?
-    </label><br><br>
+        <label class="block">
+            <input type="checkbox" name="near_park" class="mr-2">
+            Do you live near a park or open space?
+        </label>
 
-    <label>
-        <input type="checkbox" name="has_other_pets">
-        Do you currently have other pets?
-    </label><br><br>
+        <label class="block">
+            <input type="checkbox" name="has_other_pets" class="mr-2">
+            Do you currently have other pets?
+        </label>
+    </div>
 
-    <label>Describe your previous experience with pets:</label><br>
-    <textarea name="pet_experience"></textarea><br><br>
+    <div>
+        <label class="block font-semibold mb-1">Describe your previous experience with pets:</label>
+        <textarea name="pet_experience"
+                  class="w-full border rounded-lg p-3 min-h-24"></textarea>
+    </div>
 
-    <label>How many hours per day would the pet be left alone?</label><br>
-    <input type="number" name="hours_alone" min="0" max="24" required><br><br>
+    <div>
+        <label class="block font-semibold mb-1">How many hours per day would the pet be left alone?</label>
+        <input type="number" name="hours_alone" min="0" max="24" required
+               class="w-full border rounded-lg p-3">
+    </div>
 
-    <label>Any additional reason why you would be a suitable adopter?</label><br>
-    <textarea name="reason"></textarea><br><br>
+    <div>
+        <label class="block font-semibold mb-1">Any additional reason why you would be a suitable adopter?</label>
+        <textarea name="reason"
+                  class="w-full border rounded-lg p-3 min-h-24"></textarea>
+    </div>
 
-    <button type="submit">Submit Application</button>
+    <div class="flex gap-3 items-center">
+        <button type="submit" class="bg-pink-500 text-white px-5 py-2 rounded-lg hover:bg-pink-600">
+            Submit Application
+        </button>
+
+        <a href="{% url 'pet_detail' pet.id %}" class="text-gray-600 hover:underline">
+            Cancel
+        </a>
+    </div>
 </form>
-
-<a href="{% url 'pet_detail' pet.id %}">Back</a>
 {% endblock %}

@@ -1,42 +1,63 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1>Available Pets 🐾</h1>
+<h1 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">
+    Available Pets
+</h1>
 
 {% if user.is_authenticated %}
     {% if user.profile.role == 'STAFF' or user.profile.role == 'ADMIN' %}
-        <p><a href="{% url 'add_pet' %}">Add New Pet</a></p>
+        <p class="mb-6">
+            <a href="{% url 'add_pet' %}" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600">
+                + Add New Pet
+            </a>
+        </p>
     {% endif %}
 {% endif %}
 
-<ul>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for pet in pets %}
-        <li>
-            <a href="{% url 'pet_detail' pet.id %}">
-                <strong>{{ pet.name }}</strong>
-            </a>
-            - {{ pet.breed }} ({{ pet.pet_type }})
+        <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition">
 
             {% if pet.image %}
-                <br>
-                <img src="{{ pet.image.url }}" width="150" alt="{{ pet.name }}">
-                <br>
+                <img src="{{ pet.image.url }}" alt="{{ pet.name }}" class="w-full h-48 object-cover rounded-lg mb-4">
             {% endif %}
 
-            {% if user.is_authenticated %}
-                {% if user.profile.role == 'ADOPTER' %}
-                    <a href="{% url 'apply_for_pet' pet.id %}">Apply</a>
-                    <a href="{% url 'toggle_favourite' pet.id %}">⭐ Favourite</a>
-                {% endif %}
+            <a href="{% url 'pet_detail' pet.id %}">
+                <h2 class="text-xl font-semibold text-pink-600 hover:text-pink-700">
+                    {{ pet.name }}
+                </h2>
+            </a>
 
-                {% if user.profile.role == 'STAFF' or user.profile.role == 'ADMIN' %}
-                    <a href="{% url 'edit_pet' pet.id %}">Edit</a>
-                    <a href="{% url 'delete_pet' pet.id %}">Delete</a>
+            <p class="text-gray-600 mt-1">
+                {{ pet.breed }} · {{ pet.pet_type }}
+            </p>
+
+            <div class="mt-4 flex gap-2 flex-wrap">
+                {% if user.is_authenticated %}
+                    {% if user.profile.role == 'ADOPTER' %}
+                        <a href="{% url 'apply_for_pet' pet.id %}" class="bg-pink-500 text-white px-3 py-1 rounded-lg hover:bg-pink-600">
+                            Apply
+                        </a>
+                        <a href="{% url 'toggle_favourite' pet.id %}" class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg hover:bg-yellow-200">
+                            Favourite
+                        </a>
+                    {% endif %}
+
+                    {% if user.profile.role == 'STAFF' or user.profile.role == 'ADMIN' %}
+                        <a href="{% url 'edit_pet' pet.id %}" class="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-200">
+                            Edit
+                        </a>
+                        <a href="{% url 'delete_pet' pet.id %}" class="bg-red-100 text-red-600 px-3 py-1 rounded-lg hover:bg-red-200">
+                            Delete
+                        </a>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        </li>
+            </div>
+
+        </div>
     {% empty %}
-        <li>No pets available right now.</li>
+        <p class="text-gray-600">No pets available right now.</p>
     {% endfor %}
-</ul>
+</div>
 {% endblock %}

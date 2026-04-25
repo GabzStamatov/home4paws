@@ -1,6 +1,43 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1>Welcome to Home4Paws</h1>
-<p>A pet adoption management system.</p>
+
+<div class="text-center mb-10">
+    <h1 class="text-4xl font-bold text-gray-800 mb-4">
+        Welcome to Home4Paws
+    </h1>
+    <p class="text-gray-600 text-lg">
+        Helping pets find loving homes, one adoption at a time.
+    </p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+        <h2 class="text-xl font-semibold text-pink-600 mb-2">Browse Pets</h2>
+        <p class="text-gray-600 mb-4">
+            Explore a variety of pets looking for a new home.
+        </p>
+        <a href="{% url 'pet_list' %}" 
+           class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600">
+            View Pets
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+        <h2 class="text-xl font-semibold text-pink-600 mb-2">Apply to Adopt</h2>
+        <p class="text-gray-600 mb-4">
+            Submit an application and start your adoption journey.
+        </p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+        <h2 class="text-xl font-semibold text-pink-600 mb-2">Save Favourites</h2>
+        <p class="text-gray-600 mb-4">
+            Keep track of pets you love and come back anytime.
+        </p>
+    </div>
+
+</div>
+
 {% endblock %}
